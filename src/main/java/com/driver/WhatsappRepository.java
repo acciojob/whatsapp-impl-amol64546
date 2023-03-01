@@ -14,7 +14,7 @@ public class WhatsappRepository {
     private HashMap<Message, User> senderMap;
     private HashMap<Group, User> adminMap;
     private HashSet<String> userMobile;
-    private HashMap<Integer,Message> messageMap;
+
     private int customGroupCount;
     private int messageId;
 
@@ -33,12 +33,12 @@ public class WhatsappRepository {
         if(userMobile.contains(mobile)){
             throw new Exception("User already exists");
         }
+        User user = new User(name,mobile);
         userMobile.add(mobile);
         return "SUCCESS";
     }
 
     public Group createGroup(List<User> users) {
-        Group group;
 
         String groupName = "";
 
@@ -49,7 +49,7 @@ public class WhatsappRepository {
             groupName = "Group "+ this.customGroupCount;
         }
 
-        group = new Group(groupName ,users.size());
+        Group group = new Group(groupName ,users.size());
         this.groupUserMap.put(group,users);
         this.adminMap.put(group,users.get(0));
         this.groupMessageMap.put(group,new ArrayList<>());
@@ -59,7 +59,7 @@ public class WhatsappRepository {
 
     public int createMessage(String content) {
         messageId++;
-        messageMap.put(messageId,new Message(messageId,content));
+        Message message = new Message(messageId,content);
         return messageId;
     }
 
@@ -115,7 +115,6 @@ public class WhatsappRepository {
            if(senderMap.get(m).equals(user)){
                senderMap.remove(m);
                groupMessageMap.get(gp).remove(m);
-               messageMap.remove(m.getId());
            }
        }
 
@@ -124,15 +123,15 @@ public class WhatsappRepository {
     }
 
     public String findMessage(Date start, Date end, int k) throws Exception{
-        Map<Date,Message> map = new TreeMap();
+        Map<Integer,String> map = new TreeMap();
         for(Message m: senderMap.keySet()){
             if(start.compareTo(m.getTimestamp())<0 && m.getTimestamp().compareTo(end)<0){
-                map.put(m.getTimestamp(),m);
+                map.put(m.getId(),m.getContent());
             }
         }
         if(map.size()<k) throw new Exception("K is greater than the number of messages");
 
-        List<Message> list = new ArrayList<>(map.values());
-        return list.get(list.size()-k).getContent();
+        List<String> list = new ArrayList<>(map.values());
+        return list.get(list.size()-k);
     }
 }
