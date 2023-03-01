@@ -23,9 +23,10 @@ public class WhatsappController {
     WhatsappService whatsappService = new WhatsappService();
 
     @PostMapping("/add-user")
-    public String createUser(String name, String mobile) throws Exception {
+    public String createUser(String name,String mobile) throws Exception {
         //If the mobile number exists in database, throw "User already exists" exception
         //Otherwise, create the user and return "SUCCESS"
+
 
         return whatsappService.createUser(name, mobile);
     }
@@ -40,7 +41,6 @@ public class WhatsappController {
 
         //For example: Consider userList1 = {Alex, Bob, Charlie}, userList2 = {Dan, Evan}, userList3 = {Felix, Graham, Hugh}.
         //If createGroup is called for these userLists in the same order, their group names would be "Group 1", "Evan", and "Group 2" respectively.
-
         return whatsappService.createGroup(users);
     }
 
@@ -53,7 +53,7 @@ public class WhatsappController {
     }
 
     @PutMapping("/send-message")
-    public int sendMessage(Message message, User sender, Group group) throws Exception{
+    public int sendMessage(Message message,User sender, Group group) throws Exception{
         //Throw "Group does not exist" if the mentioned group does not exist
         //Throw "You are not allowed to send message" if the sender is not a member of the group
         //If the message is sent successfully, return the final number of messages in that group.
@@ -61,7 +61,7 @@ public class WhatsappController {
         return whatsappService.sendMessage(message, sender, group);
     }
     @PutMapping("/change-admin")
-    public String changeAdmin(User approver, User user, Group group) throws Exception{
+    public String changeAdmin( User approver,User user, Group group) throws Exception{
         //Throw "Group does not exist" if the mentioned group does not exist
         //Throw "Approver does not have rights" if the approver is not the current admin of the group
         //Throw "User is not a participant" if the user is not a part of the group
@@ -83,7 +83,7 @@ public class WhatsappController {
     }
 
     @GetMapping("/find-messages")
-    public String findMessage(Date start, Date end, int K) throws Exception{
+    public String findMessage( Date start, Date end, int K) throws Exception{
         //This is a bonus problem and does not contains any marks
         // Find the Kth latest message between start and end (excluding start and end)
         // If the number of messages between given time is less than K, throw "K is greater than the number of messages" exception
